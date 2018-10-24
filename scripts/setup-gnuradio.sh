@@ -9,12 +9,12 @@ echo "gnuradio - rtprio 99" | sudo tee -a /etc/security/limits.conf
 sudo mv 90-usrp.conf /etc/sysctl.d/
 
 ### PYBOMBS
-sudo apt -y install python-ipython python-scipy python-numpy python-qwt5-qt4 python-wxgtk3.0
+sudo apt -y install python-ipython python-scipy python-numpy python-qwt5-qt4 python-wxgtk3.0 multimon sox
 
 sudo apt-get -y install python-pip
-sudo pip install --upgrade pip
 
-pip install --user PyBOMBS
+# broken pybombs
+pip install --user git+git://github.com/gnuradio/pybombs.git
 
 pybombs -v recipes add gr-recipes git+https://github.com/gnuradio/gr-recipes.git
 pybombs -v recipes add gr-etcetera git+https://github.com/gnuradio/gr-etcetera.git
@@ -42,18 +42,19 @@ sudo cp pybombs/src/uhd/host/utils/uhd-usrp.rules /etc/udev/rules.d/
 pybombs/lib/uhd/utils/uhd_images_downloader.py
 
 ### GNU RADIO
+pybombs config --package gnuradio gitbranch maint
 pybombs -v install gnuradio
 /home/gnuradio/pybombs/libexec/gnuradio/grc_setup_freedesktop install
 rm -rf ~/.gnome/apps/gnuradio-grc.desktop
 rm -rf ~/.local/share/applications/gnuradio-grc.desktop
 mv gnuradio-grc.desktop .local/share/applications/gnuradio-grc.desktop
 
+### GR OSMOSDR
+pybombs -v install gr-osmosdr
+
 ### GQRX
 pybombs -v install gqrx
 xdg-icon-resource install --context apps --novendor --size 96 Pictures/gqrx-icon.png
-
-### GR OSMOSDR
-pybombs -v install gr-osmosdr
 
 ### FOSPHOR
 sudo apt-get -y install libfreetype6-dev ocl-icd-opencl-dev python-opengl lsb-core
@@ -75,14 +76,15 @@ cd
 pybombs -v install gr-foo
 pybombs -v install gr-ieee-80211
 pybombs -v install gr-ieee-802154
+pybombs -v install gr-rds
+pybombs -v install inspectrum
+xdg-icon-resource install --context apps --novendor --size 96 Pictures/inspectrum-icon.png
 
 ### CLEAN UP OUR STUFF
 rm -r Downloads/*
-find ./pybombs -type d -name '.git' | xargs rm -rf
-find ./pybombs -type d -name 'build' | xargs rm -rf
 
 ### FAVORIT APPLICATIONS
-xvfb-run dconf write /org/gnome/shell/favorite-apps "['fosphor.desktop', 'gqrx.desktop', 'gnuradio-grc.desktop', 'terminator.desktop', 'gnuradio-web.desktop', 'firefox.desktop', 'org.gnome.Nautilus.desktop']"
+xvfb-run dconf write /org/gnome/shell/favorite-apps "['gnuradio-grc.desktop', 'gqrx.desktop', 'fosphor.desktop', 'inspectrum.desktop', 'terminator.desktop', 'gnuradio-web.desktop', 'firefox.desktop', 'org.gnome.Nautilus.desktop']"
 
 ### The German Code
 # xvfb-run dconf write /org/gnome/desktop/input-sources/sources "[('xkb', 'de')]"

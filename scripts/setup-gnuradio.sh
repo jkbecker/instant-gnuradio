@@ -36,13 +36,17 @@ sudo apt-get -y install pkg-config libfftw3-dev
 pybombs -v install hackrf
 sudo cp pybombs/src/hackrf/host/libhackrf/53-hackrf.rules /etc/udev/rules.d/
 
+### BLADERF
+pybombs -v install bladeRF
+sed 's/@BLADERF_GROUP@/plugdev/g' pybombs/src/bladeRF/host/misc/udev/88-nuand.rules.in > pybombs/src/bladeRF/host/misc/udev/88-nuand.rules
+sudo cp pybombs/src/bladeRF/host/misc/udev/88-nuand.rules /etc/udev/rules.d/
+
 ### UHD
 pybombs -v install uhd
 sudo cp pybombs/src/uhd/host/utils/uhd-usrp.rules /etc/udev/rules.d/
 pybombs/lib/uhd/utils/uhd_images_downloader.py
 
 ### GNU RADIO
-pybombs config --package gnuradio gitbranch maint
 pybombs -v install gnuradio
 /home/gnuradio/pybombs/libexec/gnuradio/grc_setup_freedesktop install
 rm -rf ~/.gnome/apps/gnuradio-grc.desktop
@@ -83,7 +87,7 @@ xdg-icon-resource install --context apps --novendor --size 96 Pictures/inspectru
 ### CLEAN UP OUR STUFF
 rm -r Downloads/*
 
-### FAVORIT APPLICATIONS
+### FAVORITE APPLICATIONS
 xvfb-run dconf write /org/gnome/shell/favorite-apps "['gnuradio-grc.desktop', 'gqrx.desktop', 'fosphor.desktop', 'inspectrum.desktop', 'terminator.desktop', 'gnuradio-web.desktop', 'firefox.desktop', 'org.gnome.Nautilus.desktop']"
 
 ### The German Code
